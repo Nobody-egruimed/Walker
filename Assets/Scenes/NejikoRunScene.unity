@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followTarget: {fileID: 538341614}
-  followSpeed: 5
+  followSpeed: 1
 --- !u!1001 &538341613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -754,9 +754,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc04e8b626dc40438a04d52a8c2065c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  jumpPower: 4
-  gravityPower: 5
+  speed: 5
+  jumpPower: 7
+  gravityPower: 9.8
 --- !u!1001 &1393131276
 PrefabInstance:
   m_ObjectHideFlags: 0

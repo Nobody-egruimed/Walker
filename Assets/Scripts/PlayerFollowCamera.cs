@@ -7,11 +7,13 @@ public class PlayerFollowCamera : MonoBehaviour
     Vector3 CameraPosition = Vector3.zero;
     public GameObject followTarget; 
     public float followSpeed = 0f;
-    void start()
+
+    void Start()
     {
         CameraPosition = followTarget.transform.position - transform.position;
+        Debug.Log(CameraPosition);
     }
-    void Lateupdaete()
+    void LateUpdate()
     {
         transform.position = Vector3.Lerp(
             transform.position,

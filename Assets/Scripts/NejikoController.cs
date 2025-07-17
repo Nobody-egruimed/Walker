@@ -43,7 +43,7 @@ public class NejikoController : MonoBehaviour
         transform.Rotate(0, Input.GetAxis("Horizontal") * 3f, 0);
         moveDirection.y = moveDirection.y - gravityPower * Time.deltaTime;
         Vector3 globalDirection = transform.TransformDirection(moveDirection);
-        controller.Move(globalDirection);
+        controller.Move(globalDirection * Time.deltaTime);
         animator.SetBool("run", moveDirection.z > 0f);
     }
 }
