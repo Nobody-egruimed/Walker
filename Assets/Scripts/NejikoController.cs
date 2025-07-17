@@ -13,6 +13,8 @@ public class NejikoController : MonoBehaviour
     Vector3 moveDirection = Vector3.zero;
     public float speed = -0f;
     Animator animator;
+    public float jumpPower = 0f;
+    public float gravityPower = 0f;
 
     void Start()
     {
@@ -23,6 +25,13 @@ public class NejikoController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (controller.isGrounded)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                moveDirection.y =jumpPower;
+            }
+        }
         if (Input.GetAxis("Vertical") > 0.0f)
         {
             moveDirection.z = Input.GetAxis("Vertical") * speed;
@@ -32,11 +41,7 @@ public class NejikoController : MonoBehaviour
             moveDirection.z = 0.0f;
         }
         transform.Rotate(0, Input.GetAxis("Horizontal") * 3f, 0);
-        if (Input.GetButton("Jump"))
-        {
-            moveDirection.y = 1f;
-            animator.SetTrigger("Jump");
-        }
+        moveDirection.y = moveDirection.y - gravityPower * Time.deltaTime;
         Vector3 globalDirection = transform.TransformDirection(moveDirection);
         controller.Move(globalDirection);
         animator.SetBool("run", moveDirection.z > 0f);
