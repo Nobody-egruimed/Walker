@@ -15,6 +15,10 @@ public class NejikoController : MonoBehaviour
     Animator animator;
     public float jumpPower = 0f;
     public float gravityPower = 0f;
+    int MaxLine = 2;
+    int MinLine = -2;
+    float LineWidth = 1.0f;
+    int targetLine = 0;
 
     void Start()
     {
@@ -32,15 +36,24 @@ public class NejikoController : MonoBehaviour
                 moveDirection.y =jumpPower;
             }
         }
-        if (Input.GetAxis("Vertical") > 0.0f)
+        float movePowerZ = moveDirection.z + (speed * Time.deltaTime);
+        moveDirection.z = Mathf.Clamp(movePowerZ, 0f, speed);
+        float ratioX = (targetLine * LineWidth - transform.position.x) / LineWidth;
+        moveDirection.x = ratioX * speed;
+        if (Input.GetKeyDown("right") || Input.GetKeyDown("d"))
         {
-            moveDirection.z = Input.GetAxis("Vertical") * speed;
+            if (controller.isGrounded && targetLine < MaxLine)
+            {
+                targetLine = targetLine + 1;
+            }
         }
-        else
+        if (Input.GetKeyDown("left") || Input.GetKeyDown("a"))
         {
-            moveDirection.z = 0.0f;
+            if (controller.isGrounded && targetLine > MinLine)
+            {
+                targetLine = targetLine - 1;
+            }
         }
-        transform.Rotate(0, Input.GetAxis("Horizontal") * 3f, 0);
         moveDirection.y = moveDirection.y - gravityPower * Time.deltaTime;
         Vector3 globalDirection = transform.TransformDirection(moveDirection);
         controller.Move(globalDirection * Time.deltaTime);
