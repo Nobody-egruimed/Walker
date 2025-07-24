@@ -26,6 +26,7 @@ public class StageGenerator : MonoBehaviour
                 GameObject stageObject = Instantiate(stageChip[0]);
                 stageObject.transform.position = new Vector3(0, 0, i * 30f);
                 generateStageList.Add(stageObject);
+                currentChipIndex++;
             }
         }
     }
