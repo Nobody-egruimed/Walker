@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class NejikoController : MonoBehaviour
 {
-    // Start is called before the first frame update
-
-    //1.プレイヤーのキー入力を受け取る
-    //2.キー入力の方向に移動する
-    //3.移動方向に合わせてアニメーションを再生する
     CharacterController controller;
     Vector3 moveDirection = Vector3.zero;
     public float speed = -0f;
@@ -19,7 +14,13 @@ public class NejikoController : MonoBehaviour
     int MinLine = -2;
     float LineWidth = 1.0f;
     int targetLine = 0;
-
+    float StunTime = 0.5f;
+    float recoverTime = 0.0f;
+    public int playerHitPoint = 3;
+    bool IsStum()
+    {
+        return recoverTime > 0.0f;
+    }
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -36,10 +37,19 @@ public class NejikoController : MonoBehaviour
                 moveDirection.y =jumpPower;
             }
         }
+        if(IsStum() == true)
+        {
+            moveDirection.x = 0f;
+            moveDirection.z = 0f;
+            recoverTime -= Time.deltaTime;
+        }
+        if(IsStum() == false)
+        {
         float movePowerZ = moveDirection.z + (speed * Time.deltaTime);
         moveDirection.z = Mathf.Clamp(movePowerZ, 0f, speed);
         float ratioX = (targetLine * LineWidth - transform.position.x) / LineWidth;
         moveDirection.x = ratioX * speed;
+        }
         if (Input.GetKeyDown("right") || Input.GetKeyDown("d"))
         {
             if (controller.isGrounded && targetLine < MaxLine)
@@ -58,5 +68,16 @@ public class NejikoController : MonoBehaviour
         Vector3 globalDirection = transform.TransformDirection(moveDirection);
         controller.Move(globalDirection * Time.deltaTime);
         animator.SetBool("run", moveDirection.z > 0f);
+    }
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(hit.gameObject.tag == "Robo")
+        {
+            Debug.Log("螺子娘はダメージを受けた！");
+            recoverTime = StunTime;
+            playerHitPoint--;
+            animator.SetTrigger("damage");
+            Destroy(hit.gameObject);
+        }
     }
 }

@@ -4,30 +4,43 @@ using UnityEngine;
 
 public class StageGenerator : MonoBehaviour
 {
-    // Start is called before the first frame update
+    //ターゲットキャラクターの保持用変数
     public Transform character;
+    //ステージのPrefabを配列で管理する変数
     public GameObject[] stageChip;
+    //Sceneに実体化させたステージのPrefabを管理する配列
     public List<GameObject> generateStageList = new List<GameObject>();
+    //ステージ数をカウントするインデックス
     public int preInstance = 5;
-    public int currentChipIndex;
-    void Start()
-    {
-        
-    }
+    //
+    public int currentChipIndex = 0;
 
     // Update is called once per frame
     void Update()
     {
+        //キャラクターの現在位置から現在のステージチップのインデックスを計算
         int characterPositionIndex = (int)(character.position.z / 30f);
-        if (characterPositionIndex + preInstance > currentChipIndex)
+        Debug.Log(characterPositionIndex);
+
+        //キャラクターが進んだらステージチップを追加で生成する
+        for (int i = preInstance + characterPositionIndex; i >= preInstance; i++)
         {
-            for (int i = currentChipIndex + 1; i <= preInstance; i++)
+            //最初に作ったステージ数+自分の通過したステージ数だけステージを生成する
+            if (generateStageList.Count > preInstance + characterPositionIndex)
             {
-                GameObject stageObject = Instantiate(stageChip[0]);
-                stageObject.transform.position = new Vector3(0, 0, i * 30f);
-                generateStageList.Add(stageObject);
-                currentChipIndex++;
+                return;
             }
+            //乱数を生成する
+            int randomValue = Random.Range(0, stageChip.Length);
+            Debug.Log(randomValue);
+
+            //ここで作るステージをランダムに変更する
+            GameObject stageObject = Instantiate(stageChip[randomValue]);
+
+            stageObject.transform.position = new Vector3(0, 0, currentChipIndex * 30f);
+            //生成したステージチップを管理リストに追加
+            generateStageList.Add(stageObject);
+            currentChipIndex++;
         }
     }
 }
